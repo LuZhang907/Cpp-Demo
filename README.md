@@ -32,6 +32,29 @@ vector<int> twoSum(vector<int>&nums, int target){
 }
 ```
 
+* Syntax of Ternary Operator:
+(condition)? expression_if_true:expression_if_false;
+
+* Linked list
+```c
+Node* list = new Node;
+(*list).data = "somedata"; //update value
+(*list).next = nullptr;
+
+//easier version
+Node* list = new Node;
+list -> data = "somedata"; 
+list -> next = "nullptr";
+```
+
+* Common linked lists operations
+ - Traversal
+ - Rewiring(rearrange the elements)
+ - Insertion
+ - Deletion
+
+ 
+
 
 
 
