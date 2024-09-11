@@ -32,27 +32,6 @@ vector<int> twoSum(vector<int>&nums, int target){
 }
 ```
 
-* Syntax of Ternary Operator:
-(condition)? expression_if_true:expression_if_false;
-
-* Linked list
-```c
-Node* list = new Node;
-(*list).data = "somedata"; //update value
-(*list).next = nullptr;
-
-//easier version
-Node* list = new Node;
-list -> data = "somedata"; 
-list -> next = "nullptr";
-```
-
-* Common linked lists operations
- - Traversal
- - Rewiring(rearrange the elements)
- - Insertion
- - Deletion
-
 * Add Two Numbers
 you are given two *non-empty* linked lists representing two non-negative integers. The digits are stored in *reverse order*, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
 
@@ -83,6 +62,133 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2){
 
 }
 ```
+* Median of Two Sorted Arrays
+Given two sorted array *nums1* and *nums2* of size *m* and *n8 respectively, return the median of the two sorted arrays. The overall run time complexity should be *O(log(m+n))*
+
+   - merge and sort, time complexity O((n+m)*log(n+m))
+   ```c
+       double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        // Get the sizes of both input arrays.
+        int n = nums1.size();
+        int m = nums2.size();
+
+        // Merge the arrays into a single sorted array.
+        vector<int> merged;
+        for (int i = 0; i < n; i++) {
+            merged.push_back(nums1[i]);
+        }
+        for (int i = 0; i < m; i++) {
+            merged.push_back(nums2[i]);
+        }
+
+        // Sort the merged array.
+        sort(merged.begin(), merged.end());
+
+        // Calculate the total number of elements in the merged array.
+        int total = merged.size();
+
+        if (total % 2 == 1) {
+            // If the total number of elements is odd, return the middle element as the median.
+            return static_cast<double>(merged[total / 2]);
+        } else {
+            // If the total number of elements is even, calculate the average of the two middle elements as the median.
+            int middle1 = merged[total / 2 - 1];
+            int middle2 = merged[total / 2];
+            return (static_cast<double>(middle1) + static_cast<double>(middle2)) / 2.0;
+        }
+        
+    }
+   ```
+   - Two Pointer Method, time complexity O(n+m)
+   ```c
+       double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size();
+        int m = nums2.size();
+        int i = 0, j = 0, m1 = 0, m2 = 0;
+
+        //find median
+        for(int count = 0; count <= (n+m)/2; count++){
+            m2 = m1;
+            if(i != n && j != m){
+                if(nums1[i]>nums2[j]){
+                    m1 = nums2[j++];
+                }else{
+                    m1 = nums1[i++];
+                }
+            }else if(i<n){
+                m1 = nums1[i++];
+            }else{
+                m1 = nums2[j++];
+            }
+        }
+        //check if the sume of n and m is odd
+        if((n+m)%2==1){
+            return static_cast<double>(m1);
+        }else{
+            double ans = static_cast<double>(m1)+static_cast<double>(m2);
+            return ans/2.0;
+        }
+    }
+   ```
+
+   - Binary Search, Time Complexity O(log(min(m,n)))
+   ```c
+       double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        if(nums1.size()>nums2.size()){
+            return findMedianSortedArrays(nums2, nums1);
+        }
+
+        int m = nums1.size(), n = nums2.size();
+        int left = 0, right = m;
+        while(left<=right){
+            int partitionA = (left+right)/2;
+            int partitionB = (m+n+1)/2 -partitionA;
+
+            int maxLeftA = (partitionA ==0)? INT_MIN : nums1[partitionA-1];
+            int minRightA = (partitionA ==m)? INT_MAX : nums1[partitionA];
+            int maxLeftB = (partitionB==0)? INT_MIN : nums2[partitionB-1];
+            int minRightB = (partitionB == n)? INT_MAX : nums2[partitionB];
+
+            if(maxLeftA <= minRightB && maxLeftB <= minRightA ){
+                if((m+n)%2==0){
+                    return (max(maxLeftA, maxLeftB)+min(minRightA,minRightB))/2.0;
+                }else{
+                    return max(maxLeftA, maxLeftB);
+                }
+            }else if(maxLeftA > minRightB){
+                right = partitionA-1;
+            }else{
+                left = partitionA+1;
+            }
+        }return 0.0;
+
+    }
+   ```
+
+
+# Notes
+* Syntax of Ternary Operator:
+(condition)? expression_if_true:expression_if_false;
+
+* Linked list
+```c
+Node* list = new Node;
+(*list).data = "somedata"; //update value
+(*list).next = nullptr;
+
+//easier version
+Node* list = new Node;
+list -> data = "somedata"; 
+list -> next = "nullptr";
+```
+
+* Common linked lists operations
+ - Traversal
+ - Rewiring(rearrange the elements)
+ - Insertion
+ - Deletion
+
+
 
 # Data Structures
 
@@ -208,6 +314,50 @@ int main(int argc, char *argv[]{
     }
 })
 ```
+
+* trees
+   - binary search trees
+   ```c
+   typedef struct node{
+    int number;
+    struct node *left;
+    struct node *right;
+   }node;
+   ```
+   ```c
+   bool search(node *tree, int number){
+    if(tree == NULL){
+        return false;
+    }else if(number < tree -> number){
+        return search(tree -> left, number);
+    }else if(number > tree -> number){
+        return search(tree ->right, number);
+    }else if(number == tree -> number){
+        return true;
+    }
+   }
+   ```
+
+* dictionaries, keys and values
+   - hashing
+   - hash function
+   - hash tables, array of linked list
+   ```c
+   typedef struct node{
+    char *name;
+    char *number;
+    struct node *next;
+   }node;
+
+   node *table[26];
+   ```
+* tries, a tree of arrays
+ 
+
+
+
+
+
 
 
 
